@@ -21,11 +21,11 @@ class AwesoJSONEncoder(json.JSONEncoder):
     Users can register functions as encoder function for a given fully
     qualified class name. The ``default`` method will call the registered
     function of the received object's fully qualified name. This allow users to
-    define the encoding functions wherever the want and use this adapter class
+    define the encoding functions wherever they want and use this adapter class
     to register them to be used when serialising object as JSON.
     """
 
-    _serialiser_table = {}
+    _encoder_table = {}
 
     @classmethod
     def register_encoder(cls, encoder_fct, type_identifier):
@@ -35,7 +35,7 @@ class AwesoJSONEncoder(json.JSONEncoder):
         :param encoder_fct: The encoder function to register
         :param str type_identifier: The fully qualified class name to register
         """
-        cls._serialiser_table[type_identifier] = encoder_fct
+        cls._encoder_table[type_identifier] = encoder_fct
 
     @classmethod
     def get_encoder(cls, type_identifier):
@@ -48,7 +48,7 @@ class AwesoJSONEncoder(json.JSONEncoder):
 
         :returns: Encoder function registered for `type_identifier`
         """
-        return cls._serialiser_table.get(type_identifier)
+        return cls._encoder_table.get(type_identifier)
 
     def default(self, obj):
         """
