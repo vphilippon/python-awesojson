@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-decoder.py
-~~~~~~~~~~
+awesojson.decoder
+~~~~~~~~~~~~~~~~~
 
 This module implements the AwesoJSON decoder classes.
 
@@ -23,7 +23,7 @@ class AwesoJSONDecoder(json.JSONDecoder):
     function of the received object's fully qualified name, if found in the
     parsed data. This allow users to define the decoding functions wherever
     they want and use this adapter class to register them to be used when
-    deserialising JSON objects.
+    deserializing JSON objects.
     """
 
     _decoder_table = {}
@@ -57,7 +57,7 @@ class AwesoJSONDecoder(json.JSONDecoder):
 
     def object_handler(self, obj):
         """
-        Deserialise `obj` according to the fully qualified class name, if found.
+        Deserialize `obj` according to the fully qualified class name, if found.
 
         Uses the decoder function registered for the fully qualified
         class name in the ``awesojsontype`` key of `obj`.
@@ -65,19 +65,19 @@ class AwesoJSONDecoder(json.JSONDecoder):
         If no ``awesojsontype`` key is found, the dictionnary will be returned
         as is.
 
-        :param dict obj: JSON object to deserialise
+        :param dict obj: JSON object to deserialize
 
         :raises Exception: No registered decoder function suits the defined
                            `obj['awesojsontype']`
 
-        :returns: A deserialised JSON object
+        :returns: A deserialized JSON object
         :rtype: object
         """
         if 'awesojsontype' in obj:
             type_identifier = obj['awesojsontype']
-            deserialiser = self.get_decoder(type_identifier)
-            if deserialiser:
-                obj = deserialiser(obj['data'])
+            deserializer = self.get_decoder(type_identifier)
+            if deserializer:
+                obj = deserializer(obj['data'])
             else:
                 raise Exception("No decoder funtion registered for type {0} "
                                 "(object: {1})".format(type_identifier, obj))

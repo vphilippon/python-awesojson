@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-encoder.py
-~~~~~~~~~~
+awesojson.encoder
+~~~~~~~~~~~~~~~~~
 
 This module implements the AwesoJSON encoder classes.
 
@@ -22,7 +22,7 @@ class AwesoJSONEncoder(json.JSONEncoder):
     qualified class name. The ``default`` method will call the registered
     function of the received object's fully qualified name. This allow users to
     define the encoding functions wherever they want and use this adapter class
-    to register them to be used when serialising object as JSON.
+    to register them to be used when serializing object as JSON.
     """
 
     _encoder_table = {}
@@ -57,17 +57,17 @@ class AwesoJSONEncoder(json.JSONEncoder):
         Uses the encoder function registered for the fully qualified
         class name of `obj`.
 
-        :param object obj: Object to serialise
+        :param object obj: Object to serialize
 
         :raises Exception: No registered encoder function suits `obj`
 
-        :returns: A JSON serialisable object, with the AwesoJSON type metadata
+        :returns: A JSON serializable object, with the AwesoJSON type metadata
         :rtype: dict
         """
         type_identifier = type(obj).__module__ + '.' + obj.__class__.__name__
-        serialiser = self.get_encoder(type_identifier)
-        if serialiser:
-            return {'awesojsontype': type_identifier, 'data': serialiser(obj)}
+        serializer = self.get_encoder(type_identifier)
+        if serializer:
+            return {'awesojsontype': type_identifier, 'data': serializer(obj)}
         else:
             raise Exception("No encoder funtion registered for type {0} "
                             "(object: {1})".format(type_identifier, obj))
