@@ -64,6 +64,7 @@ class AwesoJSONEncoder(json.JSONEncoder):
         :returns: A JSON serializable object, with the AwesoJSON type metadata
         :rtype: dict
         """
+        # TODO WARNING: This FQCN determination does not consider potential changes across systems
         type_identifier = type(obj).__module__ + '.' + obj.__class__.__name__
         serializer = self.get_encoder(type_identifier)
         if serializer:
