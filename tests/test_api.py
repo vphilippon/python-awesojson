@@ -5,7 +5,7 @@ try:
 except ImportError:  # Pre Python 3.3
     from mock import patch
 from StringIO import StringIO
-from awesojson import dump, dumps, load, loads
+from awesojson import dump, dumps, load, loads, register_decoder, register_encoder
 
 
 @patch('awesojson.encoder.AwesoJSONEncoder.default')
@@ -222,3 +222,40 @@ class JSONLoadsAPITest(unittest.TestCase):
         result = loads(value)
         self.assertTrue(object_handler_mock.called)
         self.assertEquals(result, expected)
+
+
+@patch('awesojson.decoder.AwesoJSONDecoder.register_decoder')
+class RegisterDecoderFunctionAPITest(unittest.TestCase):
+
+    def test_basic_registration(self, AwesoJSONDecoder_register_decoder_mock):
+        f = lambda x: x
+        register_decoder(f, 'test.name')
+        AwesoJSONDecoder_register_decoder_mock.assert_called_with(f, 'test.name')
+
+    def test_None_fct_registration(self, AwesoJSONDecoder_register_decoder_mock):
+        register_decoder(None, 'test.name')
+        AwesoJSONDecoder_register_decoder_mock.assert_called_with(None, 'test.name')
+
+    def test_None_type_identifier_registration(self, AwesoJSONDecoder_register_decoder_mock):
+        f = lambda x: x
+        register_decoder(f, None)
+        AwesoJSONDecoder_register_decoder_mock.assert_called_with(f, None)
+
+
+@patch('awesojson.encoder.AwesoJSONEncoder.register_encoder')
+class RegisterEncoderFunctionAPITest(unittest.TestCase):
+
+    def test_basic_registration(self, AwesoJSONEncoder_register_encoder_mock):
+        f = lambda x: x
+        register_encoder(f, 'test.name')
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, 'test.name')
+
+    def test_None_fct_registration(self, AwesoJSONEncoder_register_encoder_mock):
+        register_encoder(None, 'test.name')
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(None, 'test.name')
+
+    def test_None_type_identifier_registration(self, AwesoJSONEncoder_register_encoder_mock):
+        f = lambda x: x
+        register_encoder(f, None)
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, None)
+
