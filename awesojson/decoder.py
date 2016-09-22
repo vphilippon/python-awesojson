@@ -7,7 +7,7 @@ awesojson.decoder
 This module implements the AwesoJSON decoder classes.
 
 :copyright: (c) 2015 by Vincent Philippon.
-:license: LGPL V3.0, see LICENSE for more details.
+:license: MIT, see LICENSE for more details.
 """
 
 import json

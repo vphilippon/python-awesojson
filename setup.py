@@ -42,7 +42,7 @@ setup(
     package_dir={'awesojson': 'awesojson'},
     include_package_data=True,
     install_requires=requires,
-    license='LGPL V3.0',
+    license='MIT',
     zip_safe=True,
     classifiers=(
         'Development Status :: 2 - Pre-Alpha',
