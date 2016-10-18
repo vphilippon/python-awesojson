@@ -33,7 +33,7 @@ class AwesoJSONEncoderRegisterTest(unittest.TestCase):
     def test_None_type_object_registration(self):
         f = lambda x: x
         self.assertRaises(
-            exceptions.AwesoJSONException,
+            exceptions.NotATypeError,
             encoder.AwesoJSONEncoder.register_encoder,
             encoder_fct=f, type_object=None,
         )
@@ -66,10 +66,8 @@ class AwesoJSONEncoderGetEncoderTest(unittest.TestCase):
         self.assertEquals(result, f)
 
     def test_type_None_register_get(self):
-        f = lambda x: x
-        encoder.AwesoJSONEncoder._encoder_table = {None: f}
         self.assertRaises(
-            exceptions.AwesoJSONException,
+            exceptions.NotATypeError,
             encoder.AwesoJSONEncoder.get_encoder,
             type_object=None
         )

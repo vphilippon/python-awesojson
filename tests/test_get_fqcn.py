@@ -14,7 +14,7 @@ class AwesoJSONEncoderRegisterTest(unittest.TestCase):
     def test_get_fqcn_None(self):
         type_object = None
         self.assertRaises(
-            exceptions.AwesoJSONException,
+            exceptions.NotATypeError,
             utils.get_fqcn,
             type_object=type_object
         )
@@ -22,7 +22,7 @@ class AwesoJSONEncoderRegisterTest(unittest.TestCase):
     def test_get_fqcn_not_a_type(self):
         type_object = 'An instance of str'
         self.assertRaises(
-            exceptions.AwesoJSONException,
+            exceptions.NotATypeError,
             utils.get_fqcn,
             type_object=type_object
         )

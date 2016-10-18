@@ -13,7 +13,7 @@ This module implements the AwesoJSON encoder classes.
 import json
 
 from awesojson.utils import get_fqcn
-from awesojson.exceptions import AwesoJSONException
+from awesojson.exceptions import (AwesoJSONException, NotATypeError)
 
 
 class AwesoJSONEncoder(json.JSONEncoder):
@@ -39,10 +39,10 @@ class AwesoJSONEncoder(json.JSONEncoder):
         :param type type_object: The type object to register
         :param str type_identifier: The textual type identifier. Default is the fully qualified class name
 
-        :raises AwesoJSONException: The `type_object` is not a ``type``
+        :raises NotATypeError: The `type_object` is not a ``type``
         """
         if not isinstance(type_object, type):
-            raise AwesoJSONException("type_object is not a type")
+            raise NotATypeError("'{type_object}' is not a type".format(type_object=type_object))
 
         if type_identifier is None:
             type_identifier = get_fqcn(type_object)
@@ -58,13 +58,13 @@ class AwesoJSONEncoder(json.JSONEncoder):
 
         :param type type_object: The type object
 
-        :raises AwesoJSONException: The `type_object` is not a ``type``
+        :raises NotATypeError: The `type_object` is not a ``type``
 
         :returns: Encoder function registered for `type_identifier` and the textual type identifier
         :rtype: (fct, str)
         """
         if not isinstance(type_object, type):
-            raise AwesoJSONException("type_object is not a type")
+            raise NotATypeError("'{type_object}' is not a type".format(type_object=type_object))
 
         return cls._encoder_table.get(type_object)
 

@@ -17,3 +17,10 @@ class AwesoJSONException(Exception):
     """
     pass
 
+
+class NotATypeError(AwesoJSONException, TypeError):
+    """
+    The argument is not a ``type``.
+    """
+    pass
+

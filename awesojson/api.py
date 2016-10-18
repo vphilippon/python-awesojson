@@ -147,7 +147,7 @@ def register_encoder(encoder_fct, type_object, type_identifier=None):
     :param type type_object: The type object to register
     :param str type_identifier: The textual type identifier. Default is the fully qualified class name
 
-    :raises AwesoJSONException: The `type_object` is not a ``type``
+    :raises NotATypeError: The `type_object` is not a ``type``
 
     Usage::
         >>> import awesojson
