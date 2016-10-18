@@ -1,11 +1,20 @@
 import unittest
 import json
+
+try:
+    from StringIO import StringIO  # For Python 2.7
+except ImportError:  # Python 3.3+
+    from io import StringIO
+
 try:
     from unittest.mock import patch
 except ImportError:  # Pre Python 3.3
     from mock import patch
-from StringIO import StringIO
-from awesojson import dump, dumps, load, loads, register_decoder, register_encoder
+
+from awesojson import (dump, dumps,
+                       load, loads,
+                       register_decoder,
+                       register_encoder)
 
 
 @patch('awesojson.encoder.AwesoJSONEncoder.default')
