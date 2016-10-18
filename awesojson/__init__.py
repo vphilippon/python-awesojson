@@ -11,4 +11,5 @@ from .api import (dump, dumps,
                   register_encoder,
                   register_decoder)
 from .utils import get_fqcn
+from .exceptions import (AwesoJSONException)
 

@@ -11,6 +11,7 @@ This module implements the AwesoJSON decoder classes.
 """
 
 import json
+from awesojson.exceptions import AwesoJSONException
 
 
 class AwesoJSONDecoder(json.JSONDecoder):
@@ -67,8 +68,7 @@ class AwesoJSONDecoder(json.JSONDecoder):
 
         :param dict obj: JSON object to deserialize
 
-        :raises Exception: No registered decoder function suits the defined
-                           `obj['awesojsontype']`
+        :raises AwesoJSONException: No registered decoder function suits the defined `obj['awesojsontype']`
 
         :returns: A deserialized JSON object
         :rtype: object
@@ -79,8 +79,8 @@ class AwesoJSONDecoder(json.JSONDecoder):
             if deserializer:
                 obj = deserializer(obj['data'])
             else:
-                raise Exception("No decoder funtion registered for type {0} "
-                                "(object: {1})".format(type_identifier, obj))
+                raise AwesoJSONException("No decoder funtion registered for type {0} "
+                                         "(object: {1})".format(type_identifier, obj))
 
         return obj
 

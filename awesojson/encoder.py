@@ -13,6 +13,7 @@ This module implements the AwesoJSON encoder classes.
 import json
 
 from awesojson.utils import get_fqcn
+from awesojson.exceptions import AwesoJSONException
 
 
 class AwesoJSONEncoder(json.JSONEncoder):
@@ -38,10 +39,10 @@ class AwesoJSONEncoder(json.JSONEncoder):
         :param type type_object: The type object to register
         :param str type_identifier: The textual type identifier. Default is the fully qualified class name
 
-        :raises Exception: The `type_object` is not a ``type``
+        :raises AwesoJSONException: The `type_object` is not a ``type``
         """
         if not isinstance(type_object, type):
-            raise Exception("type_object is not a type")
+            raise AwesoJSONException("type_object is not a type")
 
         if type_identifier is None:
             type_identifier = get_fqcn(type_object)
@@ -57,11 +58,13 @@ class AwesoJSONEncoder(json.JSONEncoder):
 
         :param type type_object: The type object
 
+        :raises AwesoJSONException: The `type_object` is not a ``type``
+
         :returns: Encoder function registered for `type_identifier` and the textual type identifier
         :rtype: (fct, str)
         """
         if not isinstance(type_object, type):
-            raise Exception("type_object is not a type")
+            raise AwesoJSONException("type_object is not a type")
 
         return cls._encoder_table.get(type_object)
 
@@ -73,7 +76,7 @@ class AwesoJSONEncoder(json.JSONEncoder):
 
         :param object obj: Object to serialize
 
-        :raises Exception: No registered encoder function suits `obj`
+        :raises AwesoJSONException: No registered encoder function suits `obj`
 
         :returns: A JSON serializable object, with the AwesoJSON type metadata
         :rtype: dict
@@ -84,6 +87,6 @@ class AwesoJSONEncoder(json.JSONEncoder):
         if serializer:
             return {'awesojsontype': type_identifier, 'data': serializer(obj)}
         else:
-            raise Exception("No encoder funtion registered for type {0} "
-                            "(object: {1})".format(type_identifier, obj))
+            raise AwesoJSONException("No encoder funtion registered for type {0} "
+                                     "(object: {1})".format(type_identifier, obj))
 

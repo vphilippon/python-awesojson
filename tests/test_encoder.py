@@ -1,6 +1,7 @@
 import unittest
 from awesojson import (encoder,
-                       utils)
+                       utils,
+                       exceptions)
 
 
 class AwesoJSONEncoderRegisterTest(unittest.TestCase):
@@ -32,7 +33,7 @@ class AwesoJSONEncoderRegisterTest(unittest.TestCase):
     def test_None_type_object_registration(self):
         f = lambda x: x
         self.assertRaises(
-            Exception,
+            exceptions.AwesoJSONException,
             encoder.AwesoJSONEncoder.register_encoder,
             encoder_fct=f, type_object=None,
         )
@@ -68,7 +69,7 @@ class AwesoJSONEncoderGetEncoderTest(unittest.TestCase):
         f = lambda x: x
         encoder.AwesoJSONEncoder._encoder_table = {None: f}
         self.assertRaises(
-            Exception,
+            exceptions.AwesoJSONException,
             encoder.AwesoJSONEncoder.get_encoder,
             type_object=None
         )
@@ -96,12 +97,12 @@ class AwesoJSONEncoderDefaultTest(unittest.TestCase):
 
     def test_empty_table_default(self):
         inst = encoder.AwesoJSONEncoder()
-        self.assertRaises(Exception, inst.default, self.DummyClass)
+        self.assertRaises(exceptions.AwesoJSONException, inst.default, self.DummyClass)
 
     def test_no_function_registrered_default(self):
         encoder.AwesoJSONEncoder._encoder_table[self.DummyClass] = lambda x: str(x)
         inst = encoder.AwesoJSONEncoder()
-        self.assertRaises(Exception, inst.default, object())
+        self.assertRaises(exceptions.AwesoJSONException, inst.default, object())
 
     def test_basic_default(self):
         encoder.AwesoJSONEncoder._encoder_table[self.DummyClass] = (

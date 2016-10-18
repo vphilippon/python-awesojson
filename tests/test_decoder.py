@@ -1,5 +1,6 @@
 import unittest
-from awesojson import decoder
+from awesojson import (decoder,
+                       exceptions)
 
 
 class AwesoJSONDecoderRegisterTest(unittest.TestCase):
@@ -59,13 +60,13 @@ class AwesoJSONDecoderObjectHandler(unittest.TestCase):
 
     def test_empty_table_object_handler(self):
         inst = decoder.AwesoJSONDecoder()
-        self.assertRaises(Exception, inst.object_handler,
+        self.assertRaises(exceptions.AwesoJSONException, inst.object_handler,
                           {'awesojsontype': 'foo', 'data': 'bar'})
 
     def test_no_function_registrered_object_handler(self):
         decoder.AwesoJSONDecoder._decoder_table['not_foo'] = lambda x: str(x)
         inst = decoder.AwesoJSONDecoder()
-        self.assertRaises(Exception, inst.object_handler,
+        self.assertRaises(exceptions.AwesoJSONException, inst.object_handler,
                           {'awesojsontype': 'foo', 'data': 'bar'})
 
     def test_basic_object_handler(self):

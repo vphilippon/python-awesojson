@@ -27,8 +27,8 @@ def load(filehandle, **kwargs):
 
     :param file filehandle: The file-like object (supporting ``.read()``) containing a JSON document
 
-    :raises Exception: The JSON document contains an object with no registered
-                       decoder function which suits the *defined* `awesojsontype` for that object
+    :raises AwesoJSONException: The JSON document contains an object with no registered
+                                decoder function which suits the *defined* `awesojsontype` for that object
 
     :returns: The deserialized Python object
 
@@ -51,8 +51,8 @@ def loads(strvalue, **kwargs):
 
     :param (str|unicode) strvalue: The string object containing a JSON document
 
-    :raises Exception: The JSON document contains an object with no registered
-                       decoder function which suits the *defined* `awesojsontype` for that object
+    :raises AwesoJSONException: The JSON document contains an object with no registered
+                                decoder function which suits the *defined* `awesojsontype` for that object
 
     :returns: The deserialized Python object
 
@@ -76,7 +76,7 @@ def dump(obj, filehandle, **kwargs):
     :param obj: The Python object
     :param file filehandle: The file-like object (supporting ``.write()``) that receives the stream
 
-    :raises Exception: There's no registered encoder function that suits `obj`'s type
+    :raises AwesoJSONException: There's no registered encoder function that suits `obj`'s type
 
     :returns: The JSON serialization of the Python object
     :rtype: (str|unicode)
@@ -101,7 +101,7 @@ def dumps(obj, **kwargs):
 
     :param obj: The Python object
 
-    :raises Exception: There's no registered encoder function that suits `obj`'s type
+    :raises AwesoJSONException: There's no registered encoder function that suits `obj`'s type
 
     :returns: The JSON serialization of the Python object
     :rtype: (str|unicode)
@@ -147,7 +147,7 @@ def register_encoder(encoder_fct, type_object, type_identifier=None):
     :param type type_object: The type object to register
     :param str type_identifier: The textual type identifier. Default is the fully qualified class name
 
-    :raises Exception: The `type_object` is not a ``type``
+    :raises AwesoJSONException: The `type_object` is not a ``type``
 
     Usage::
         >>> import awesojson

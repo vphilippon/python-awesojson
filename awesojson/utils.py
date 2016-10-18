@@ -10,6 +10,8 @@ This module provides common utilities for the AwesoJSON lib.
 :license: MIT, see LICENSE for more details.
 """
 
+from awesojson.exceptions import AwesoJSONException
+
 
 def get_fqcn(type_object):
     """
@@ -17,13 +19,13 @@ def get_fqcn(type_object):
 
     :param type type_object: The type object to to get the FQCN of
 
-    :raises Exception: The `type_object` is not a ``type``
+    :raises AwesoJSONException: The `type_object` is not a ``type``
 
     :returns: The fully qualified class name of `type_object`
     :rtype: str
     """
     if not isinstance(type_object, type):
-        raise Exception("type_object is not a type")
+        raise AwesoJSONException("type_object is not a type")
 
     return type_object.__module__ + '.' + type_object.__name__
 
