@@ -245,17 +245,28 @@ class RegisterDecoderFunctionAPITest(unittest.TestCase):
 @patch('awesojson.encoder.AwesoJSONEncoder.register_encoder')
 class RegisterEncoderFunctionAPITest(unittest.TestCase):
 
+    class DummyClass(object):
+        """
+        Dummy class to test registration.
+        """
+        pass
+
     def test_basic_registration(self, AwesoJSONEncoder_register_encoder_mock):
         f = lambda x: x
-        register_encoder(f, 'test.name')
-        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, 'test.name')
+        register_encoder(f, self.DummyClass)
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, self.DummyClass, None)
 
     def test_None_fct_registration(self, AwesoJSONEncoder_register_encoder_mock):
-        register_encoder(None, 'test.name')
-        AwesoJSONEncoder_register_encoder_mock.assert_called_with(None, 'test.name')
+        register_encoder(None, self.DummyClass)
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(None, self.DummyClass, None)
 
     def test_None_type_identifier_registration(self, AwesoJSONEncoder_register_encoder_mock):
         f = lambda x: x
         register_encoder(f, None)
-        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, None)
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, None, None)
+
+    def test_specific_type_identifier_registration(self, AwesoJSONEncoder_register_encoder_mock):
+        f = lambda x: x
+        register_encoder(f, self.DummyClass, 'test.name')
+        AwesoJSONEncoder_register_encoder_mock.assert_called_with(f, self.DummyClass, 'test.name')
 

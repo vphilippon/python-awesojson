@@ -34,7 +34,7 @@ def load(filehandle, **kwargs):
 
     Usage::
         >>> import awesojson
-        >>> awesojson.register_decoder(my_decode_fct, 'datetime.datetime')
+        >>> awesojson.register_decoder(my_decode_fct, awesojson.get_fqcn(datetime.datetime))
         >>> python_datetime = awesojson.load(json_file_datetime)
     """
     return json.load(filehandle, cls=AwesoJSONDecoder, **kwargs)
@@ -58,7 +58,7 @@ def loads(strvalue, **kwargs):
 
     Usage::
         >>> import awesojson
-        >>> awesojson.register_decoder(my_decode_fct, 'datetime.datetime')
+        >>> awesojson.register_decoder(my_decode_fct, awesojson.get_fqcn(datetime.datetime))
         >>> python_datetime = awesojson.loads(json_string_datetime)
     """
     return json.loads(strvalue, cls=AwesoJSONDecoder, **kwargs)
@@ -83,7 +83,7 @@ def dump(obj, filehandle, **kwargs):
 
     Usage::
         >>> import awesojson
-        >>> awesojson.register_encoder(my_encode_fct, 'datetime.datetime')
+        >>> awesojson.register_encoder(my_encode_fct, datetime.datetime)
         >>> python_datetime = datetime.datetime.now()
         >>> awesojson.dump(python_datetime, json_file_datetime)
     """
@@ -108,7 +108,7 @@ def dumps(obj, **kwargs):
 
     Usage::
         >>> import awesojson
-        >>> awesojson.register_encoder(my_encode_fct, 'datetime.datetime')
+        >>> awesojson.register_encoder(my_encode_fct, datetime.datetime)
         >>> python_datetime = datetime.datetime.now()
         >>> json_string_datetime = awesojson.dumps(python_datetime)
     """
@@ -117,38 +117,43 @@ def dumps(obj, **kwargs):
 
 def register_decoder(decoder_fct, type_identifier):
     """
-    Register a function to use for the JSON deserialization of a given object type.
+    Register a function to use for the JSON deserialization of a given object type identifier.
 
     The decoding function `decoder_fct` will be registered to the ``AwesoJSONDecoder`` class
-    as the function to use to deserialize the objects for which the fully qualified class name
-    matches the `type_identifier` string.
+    as the function to use to deserialize the objects for which the textual type identifier matches
+    the `type_identifier` string.
 
     :param decoder_fct: The decoder function to register
-    :param str type_identifier: The fully qualified class name to register
+    :param str type_identifier: The textual type identifier of the ``type`` to register
 
     Usage::
         >>> import awesojson
         >>> awesojson.register_decoder(my_decode_fct, 'datetime.datetime')
+        >>> # or
+        >>> awesojson.register_decoder(my_decode_fct, awesojson.get_fqcn(datetime.datetime))
     """
-    # TODO: This should definitely use a FQDN "finder tool", this is really error prone for the user
     AwesoJSONDecoder.register_decoder(decoder_fct, type_identifier)
 
 
-def register_encoder(encoder_fct, type_identifier):
+def register_encoder(encoder_fct, type_object, type_identifier=None):
     """
     Register a function to use for the JSON serialization of a given object type.
 
     The encoding function `encoder_fct` will be registered to the ``AwesoJSONEncoder`` class
-    as the function to use to serialize the objects for which the fully qualified class name
-    matches the `type_identifier` string.
+    as the function to use to serialize the objects for which the ``type`` matches `type_object`.
+    The `type_identifier` will be used as the textual type identifier.
 
     :param encoder_fct: The encoder function to register
-    :param str type_identifier: The fully qualified class name to register
+    :param type type_object: The type object to register
+    :param str type_identifier: The textual type identifier. Default is the fully qualified class name
+
+    :raises Exception: The `type_object` is not a ``type``
 
     Usage::
         >>> import awesojson
-        >>> awesojson.register_encoder(my_encode_fct, 'datetime.datetime')
+        >>> awesojson.register_encoder(my_encode_fct, datetime.datetime)
+        >>> # or
+        >>> awesojson.register_encoder(my_encode_fct, datetime.datetime, 'datetime.datetime')
     """
-    # TODO: This should definitely use a FQDN "finder tool", this is really error prone for the user
-    AwesoJSONEncoder.register_encoder(encoder_fct, type_identifier)
+    AwesoJSONEncoder.register_encoder(encoder_fct, type_object, type_identifier)
 

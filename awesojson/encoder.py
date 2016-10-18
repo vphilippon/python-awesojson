@@ -12,50 +12,64 @@ This module implements the AwesoJSON encoder classes.
 
 import json
 
+from awesojson.utils import get_fqcn
+
 
 class AwesoJSONEncoder(json.JSONEncoder):
     """
     A ``JSONEncoder`` subclass serving as an adapter for user-defined encoder
     functions.
 
-    Users can register functions as encoder function for a given fully
-    qualified class name. The ``default`` method will call the registered
-    function of the received object's fully qualified name. This allow users to
-    define the encoding functions wherever they want and use this adapter class
-    to register them to be used when serializing object as JSON.
+    Users can register functions as encoder function for ``type`` and a textual
+    type identifier. The ``default`` method will call the registered function
+    of the received object's ``type``. This allow users to define the encoding
+    functions wherever they want and use this adapter class to register them
+    to be used when serializing object as JSON.
     """
 
     _encoder_table = {}
 
     @classmethod
-    def register_encoder(cls, encoder_fct, type_identifier):
+    def register_encoder(cls, encoder_fct, type_object, type_identifier=None):
         """
-        Register `encoder_fct` as the encode function for `type_identifier`.
+        Register `encoder_fct` as the encode function for `type_object` identified as `type_identifier`.
 
         :param encoder_fct: The encoder function to register
-        :param str type_identifier: The fully qualified class name to register
+        :param type type_object: The type object to register
+        :param str type_identifier: The textual type identifier. Default is the fully qualified class name
+
+        :raises Exception: The `type_object` is not a ``type``
         """
-        cls._encoder_table[type_identifier] = encoder_fct
+        if not isinstance(type_object, type):
+            raise Exception("type_object is not a type")
+
+        if type_identifier is None:
+            type_identifier = get_fqcn(type_object)
+
+        cls._encoder_table[type_object] = (encoder_fct, type_identifier)
 
     @classmethod
-    def get_encoder(cls, type_identifier):
+    def get_encoder(cls, type_object):
         """
-        Get the registered encoder function for `type_identifier`.
+        Get the registered encoder function and textual type identifier for `type_object`.
 
         Will return ``None`` if no function is registered for `type_identifier`.
 
-        :param str type_identifier: Fully qualified class name
+        :param type type_object: The type object
 
-        :returns: Encoder function registered for `type_identifier`
+        :returns: Encoder function registered for `type_identifier` and the textual type identifier
+        :rtype: (fct, str)
         """
-        return cls._encoder_table.get(type_identifier)
+        if not isinstance(type_object, type):
+            raise Exception("type_object is not a type")
+
+        return cls._encoder_table.get(type_object)
 
     def default(self, obj):
         """
-        Serialize `obj` according to it's fully qualified class name.
+        Serialize `obj` according to it's ``type``.
 
-        Uses the encoder function registered for the fully qualified
-        class name of `obj`.
+        Uses the encoder function registered for the ``type`` of `obj`.
 
         :param object obj: Object to serialize
 
@@ -64,11 +78,12 @@ class AwesoJSONEncoder(json.JSONEncoder):
         :returns: A JSON serializable object, with the AwesoJSON type metadata
         :rtype: dict
         """
-        # TODO WARNING: This FQCN determination does not consider potential changes across systems
-        type_identifier = type(obj).__module__ + '.' + obj.__class__.__name__
-        serializer = self.get_encoder(type_identifier)
+        type_object = type(obj)
+        registration = self.get_encoder(type_object)
+        serializer, type_identifier = registration or (None, None)
         if serializer:
             return {'awesojsontype': type_identifier, 'data': serializer(obj)}
         else:
             raise Exception("No encoder funtion registered for type {0} "
                             "(object: {1})".format(type_identifier, obj))
+
